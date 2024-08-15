@@ -125,6 +125,33 @@ body {
     animation: blink 0.5s linear 0s 4; /* Piscar a cada 0.5s durante 2s (4 iterações) */
 }
 
+#command-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
 
+.command-slot {
+    width: 50px; /* Ajusta o tamanho dos botões */
+    height: 50px; /* Ajusta o tamanho dos botões */
+    margin: 5px;
+    border: 2px solid #333; /* Borda mais escura para contraste */
+    border-radius: 12px; /* Bordas arredondadas */
+    background-color: #e0e0e0; /* Fundo cinza claro */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: default;
+    transition: background-color 0.3s, border-color 0.3s; /* Suaviza a transição de cor */
+}
+
+.command-slot:hover {
+    background-color: #d0d0d0; /* Fundo cinza escuro ao passar o mouse */
+    border-color: #222; /* Escurece a borda ao passar o mouse */
+}
+
+.command-slot:active {
+    background-color: #b0b0b0; /* Fundo cinza mais escuro quando pressionado */
+}
 
 

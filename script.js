@@ -6,12 +6,14 @@ const maxCommands = 6; // Número máximo de comandos permitidos
 const character = document.getElementById('character');
 const target = document.getElementById('target');
 const feedback = document.getElementById('feedback');
+const commandSlots = document.querySelectorAll('.command-slot');
 
 let animationInterval;
 let animationFrame;
 let targetAnimationFrame;
 
 const initialPosition = { top: 0, left: 0 };
+let currentSlot = null; // Armazena o botão atual clicado para substituição
 
 function startGame() {
     document.getElementById('start-btn').style.display = 'none';
@@ -20,21 +22,27 @@ function startGame() {
     const commandButtons = document.querySelectorAll('.command-btn');
     commandButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            if (commands.length < maxCommands) { // Verifica se o limite não foi atingido
-                const command = btn.getAttribute('data-command');
-                commands.push(command);
+            if (currentSlot) {
+                // Substituir o comando no slot selecionado
+                updateCommandSlot(currentSlot, btn.getAttribute('data-command'));
+                currentSlot = null; // Resetar slot selecionado
+            } else {
+                // Adicionar comando à lista e ao feedback
+                addCommand(btn.getAttribute('data-command'));
+            }
+        });
+    });
 
-                // Adicionar imagem correspondente ao feedback
-                const arrowImg = document.createElement('img');
-                arrowImg.src = `assets/system/${command} arrow.png`; // Constrói o caminho da imagem
-                arrowImg.classList.add('feedback-img');
-                
-                // Adicionar a imagem no feedback, substituindo a primeira posição vazia
-                const feedbackImgs = feedback.querySelectorAll('.feedback-img');
-                if (feedbackImgs.length >= maxCommands) {
-                    feedbackImgs[0].remove(); // Remove o primeiro elemento se o limite for atingido
-                }
-                feedback.appendChild(arrowImg);
+    // Configurar eventos de clique nos botões abaixo da game area
+    commandSlots.forEach(slot => {
+        slot.addEventListener('click', () => {
+            if (slot.style.backgroundImage) {
+                // Se o slot já tiver um comando, marque-o como o slot atual para substituição
+                currentSlot = slot;
+                // Remove a imagem do slot selecionado
+                slot.style.backgroundImage = '';
+                // Remove o comando da lista
+                commands.splice(commands.indexOf(slot.dataset.command), 1);
             }
         });
     });
@@ -69,6 +77,27 @@ function positionTarget(col, row) {
     const position = getCellPosition(row, col);
     target.style.top = `${position.top}px`;
     target.style.left = `${position.left}px`;
+}
+
+function addCommand(command) {
+    if (commands.length < maxCommands) {
+        commands.push(command);
+
+        // Encontra o primeiro slot vazio para adicionar o novo comando
+        const emptySlot = Array.from(commandSlots).find(slot => !slot.style.backgroundImage);
+        if (emptySlot) {
+            emptySlot.style.backgroundImage = `url('assets/system/${command} arrow.png')`; // Adiciona a nova imagem
+            emptySlot.dataset.command = command; // Armazena o comando no dataset
+        }
+    }
+}
+
+function updateCommandSlot(slot, command) {
+    // Atualiza o slot com o novo comando
+    slot.style.backgroundImage = `url('assets/system/${command} arrow.png')`; // Atualiza a imagem
+    slot.dataset.command = command; // Atualiza o comando no dataset
+    // Adiciona o novo comando à lista
+    commands.push(command);
 }
 
 function executeCommands() {
@@ -140,6 +169,7 @@ function executeCommands() {
                 }, 5000);
 
                 commands.length = 0; // Clear commands
+                commandSlots.forEach(slot => slot.style.backgroundImage = ''); // Clear slots
             }
         }
     }, 500);
