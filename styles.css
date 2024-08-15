@@ -1,0 +1,130 @@
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+#app {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#game-screen {
+    margin-top: 20px;
+}
+
+#command-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.command-btn {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    cursor: pointer;
+    transition: transform 0.1s ease; /* Transição suave para o efeito de clique */
+}
+
+
+#execute-btn {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#game-area-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-area {
+    width: 400px;
+    height: 400px;
+    border: 1px solid #000;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    overflow: hidden; /* Garante que nada saia da área do jogo */
+}
+
+
+#grid-container {
+    display: contents;
+}
+
+#grid-container > div {
+    background: url('assets/cell-background.png') no-repeat center center;
+    background-size: cover;
+    border: 1px solid white;
+}
+
+#character, #target {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    transition: top 0.5s, left 0.5s;
+}
+
+#feedback {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.feedback-img {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    margin: 5px;
+}
+.flip-horizontal {
+    transform: scaleX(-1); /* Aplica o efeito de flip horizontal */
+}
+#command-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative; /* Permite posicionamento absoluto dentro do painel */
+}
+
+#execute-btn {
+    cursor: pointer;
+    margin-left: 20px;
+    margin-top: 10px;
+    width: 40px; /* Tamanho original */
+    height: 40px; /* Tamanho original */
+    transition: transform 0.1s ease; /* Transição suave para o efeito de clique */
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.blink {
+    animation: blink 0.5s linear 0s 4; /* Piscar a cada 0.5s durante 2s (4 iterações) */
+}
+
+
+
+
