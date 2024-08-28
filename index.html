@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algorithm Adventure</title>
+    <title>ODS Adventure</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
+
+
+
+
 <body>
 
     
@@ -15,7 +20,7 @@
     <div id="app">
 
         
-        <h1>Algorithm Adventure</h1>
+        <h1>ODS Adventure</h1>
         <button id="start-btn">Iniciar Jogo</button>
         <div id="game-screen" style="display: none;">
             <div id="instructions">Use os comandos para mover o personagem até a moeda!</div>
@@ -26,6 +31,9 @@
                 <img class="command-btn" src="assets/system/right arrow.png" data-command="right" alt="Right Arrow">
                 <img id="execute-btn" src="assets/system/play.png" alt="Play"> <!-- Botão Play -->
             </div>
+
+
+          
             
             
             <div id="game-area-wrapper">
@@ -35,6 +43,8 @@
                     <img id="target" src="assets/target.png" style="top: 200px; left: 200px;">
                 </div>
             </div>
+
+         
 
 
             <div id="command-buttons">
@@ -49,6 +59,13 @@
             <div id="feedback"></div>
         </div>
     </div>
+
+
+    <div id="feedback"></div>
+    <!-- Adiciona o elemento de áudio para o fundo -->
+    <audio id="background-music" src="assets/audio/Game/background.mp3" loop></audio>
+</div>
+
     <script src="script.js"></script>
 </body>
 </html>

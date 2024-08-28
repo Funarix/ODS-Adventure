@@ -14,21 +14,28 @@ let targetAnimationFrame;
 
 const initialPosition = { top: 0, left: 0 };
 let currentSlot = null; // Armazena o botão atual clicado para substituição
+let lastCommand = null; // Armazena o último comando adicionado
 
 function startGame() {
     document.getElementById('start-btn').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
 
+    // Inicia a reprodução da música de fundo
+    const backgroundMusic = document.getElementById('background-music');
+    backgroundMusic.play();
+
     const commandButtons = document.querySelectorAll('.command-btn');
     commandButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             if (currentSlot) {
-                // Substituir o comando no slot selecionado
+                // Se há um slot selecionado, substitua a imagem da seta e mova o personagem
                 updateCommandSlot(currentSlot, btn.getAttribute('data-command'));
                 currentSlot = null; // Resetar slot selecionado
+                lastCommand = btn.getAttribute('data-command'); // Atualizar o último comando
             } else {
-                // Adicionar comando à lista e ao feedback
+                // Se não há um slot selecionado, adicione o comando à lista
                 addCommand(btn.getAttribute('data-command'));
+                lastCommand = btn.getAttribute('data-command'); // Atualizar o último comando
             }
         });
     });
@@ -40,9 +47,15 @@ function startGame() {
                 // Se o slot já tiver um comando, marque-o como o slot atual para substituição
                 currentSlot = slot;
                 // Remove a imagem do slot selecionado
+                const commandToRemove = slot.dataset.command;
                 slot.style.backgroundImage = '';
+                slot.dataset.command = ''; // Remove o comando do dataset
                 // Remove o comando da lista
-                commands.splice(commands.indexOf(slot.dataset.command), 1);
+                const commandIndex = commands.indexOf(commandToRemove);
+                if (commandIndex !== -1) {
+                    commands.splice(commandIndex, 1);
+                }
+                lastCommand = commandToRemove; // Atualizar o último comando
             }
         });
     });
@@ -97,7 +110,9 @@ function updateCommandSlot(slot, command) {
     slot.style.backgroundImage = `url('assets/system/${command} arrow.png')`; // Atualiza a imagem
     slot.dataset.command = command; // Atualiza o comando no dataset
     // Adiciona o novo comando à lista
-    commands.push(command);
+    if (commands.length < maxCommands) {
+        commands.push(command);
+    }
 }
 
 function executeCommands() {
@@ -135,6 +150,13 @@ function executeCommands() {
                 character.style.top = `${position.top}px`;
                 character.style.left = `${position.left}px`;
                 animateCharacter();
+            } else {
+                // Aplica o efeito de fantasma piscando ao colidir com a borda
+                character.classList.add('blink-border');
+
+                setTimeout(() => {
+                    character.classList.remove('blink-border');
+                }, 2000); // Efeito de fantasma piscando dura 2 segundos
             }
 
             index++;
@@ -144,12 +166,8 @@ function executeCommands() {
             character.src = 'assets/player.png'; // Reset to the first frame
 
             if (position.top === parseInt(target.style.top, 10) && position.left === parseInt(target.style.left, 10)) {
-                feedback.textContent = `Você atingiu o objetivo!`;
-                
-                // Remover o texto após 5 segundos
-                setTimeout(() => {
-                    feedback.textContent = '';
-                }, 5000);
+                playCoinSound(); // Tocar o som da moeda
+                resetGame(); // Retornar ao estado inicial
             } else {
                 feedback.textContent = 'Tente novamente!';
                 
@@ -212,6 +230,31 @@ function animateTarget() {
         target.src = targetAnimationFrames[frame];
         frame = (frame + 1) % targetAnimationFrames.length;
     }, 100);  // Change interval to 100 ms for faster animation
+}
+
+function playCoinSound() {
+    const coinSound = new Audio('assets/audio/Game/coin.mp3');
+    let playCount = 0;
+
+    const interval = setInterval(() => {
+        coinSound.play();
+        playCount++;
+        if (playCount >= 3) {
+            clearInterval(interval);
+        }
+    }, 100); // Interval de 0.1 segundos entre os toques do som
+}
+
+function resetGame() {
+    setTimeout(() => {
+        // Reiniciar o estado inicial do jogo
+        character.style.top = `${initialPosition.top}px`;
+        character.style.left = `${initialPosition.left}px`;
+        character.classList.remove('flip-horizontal'); // Remove o flip ao resetar
+        commands.length = 0; // Clear commands
+        commandSlots.forEach(slot => slot.style.backgroundImage = ''); // Clear slots
+        feedback.textContent = ''; // Clear feedback
+    }, 1000); // Delay antes de reiniciar o jogo
 }
 
 const executeBtn = document.getElementById('execute-btn');

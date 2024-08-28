@@ -153,5 +153,18 @@ body {
 .command-slot:active {
     background-color: #b0b0b0; /* Fundo cinza mais escuro quando pressionado */
 }
+/* Adiciona o efeito de piscando para o personagem quando ele colide com a borda */
+.blink-border {
+    animation: blink-border 0.5s linear infinite;
+}
+
+@keyframes blink-border {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
 
 
