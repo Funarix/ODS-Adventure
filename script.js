@@ -1,4 +1,3 @@
-document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('execute-btn').addEventListener('click', executeCommands);
 
 const commands = [];
@@ -16,8 +15,12 @@ const initialPosition = { top: 0, left: 0 };
 let currentSlot = null; // Armazena o botão atual clicado para substituição
 let lastCommand = null; // Armazena o último comando adicionado
 
+// Inicia o jogo automaticamente quando a página carrega
+window.onload = function() {
+    startGame();
+};
+
 function startGame() {
-    document.getElementById('start-btn').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
 
     // Inicia a reprodução da música de fundo
@@ -65,6 +68,8 @@ function startGame() {
     positionTarget('D', 3);  // Posicionando o target na coordenada D3
 }
 
+// Outras funções permanecem as mesmas
+
 function populateGrid() {
     const gridContainer = document.getElementById('grid-container');
     gridContainer.innerHTML = ''; // Limpar qualquer célula existente
@@ -78,6 +83,9 @@ function populateGrid() {
         }
     }
 }
+
+// ... Mantenha o restante do código JavaScript inalterado
+
 
 function getCellPosition(row, col) {
     return {
