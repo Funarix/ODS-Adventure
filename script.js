@@ -1,5 +1,10 @@
 document.getElementById('execute-btn').addEventListener('click', executeCommands);
 
+
+const buttonPressSound = new Audio('Assets/audio/Game/button-pressed.mp3');
+buttonPressSound.volume = 1.0; // Define o volume máximo
+
+
 const commands = [];
 const maxCommands = 6; // Número máximo de comandos permitidos
 const character = document.getElementById('character');
@@ -67,6 +72,13 @@ function startGame() {
     animateTarget();
     positionTarget('D', 3);  // Posicionando o target na coordenada D3
 }
+
+function playButtonPressSound() {
+    buttonPressSound.currentTime = 0; // Reinicia o som para evitar atrasos
+    buttonPressSound.play();
+}
+
+
 
 // Outras funções permanecem as mesmas
 
@@ -285,6 +297,7 @@ const commandButtons = document.querySelectorAll('.command-btn');
 function addClickAnimation(button) {
     button.addEventListener('mousedown', () => {
         button.style.transform = 'scale(0.9)'; // Reduz o botão ligeiramente
+        playButtonPressSound(); // Toca o som quando o botão é pressionado
     });
 
     button.addEventListener('mouseup', () => {

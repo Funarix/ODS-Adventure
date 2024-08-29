@@ -167,4 +167,19 @@ body {
     }
 }
 
+h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: transparent; /* Torna o texto transparente para exibir o gradiente */
+    background: linear-gradient(90deg, 
+        #26BDE2, #0A97D9, #00689D, #19486A,  /* Azul */
+        #4C9F38, #3F7E44, #56C02B,          /* Verde */
+        #DDA63A, #FCC30B,                  /* Amarelo */
+        #E5243B, #C5192D, #FF3A21, #A21942,/* Vermelho */
+        #DD1367                            /* Roxo */
+    );
+    -webkit-background-clip: text; /* Suporte para navegadores Webkit */
+    background-clip: text; /* Exibe o gradiente apenas na área do texto */
+}
 
