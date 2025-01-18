@@ -1,9 +1,7 @@
 document.getElementById('execute-btn').addEventListener('click', executeCommands);
 
-
 const buttonPressSound = new Audio('Assets/audio/Game/button-pressed.mp3');
 buttonPressSound.volume = 1.0; // Define o volume máximo
-
 
 const commands = [];
 const maxCommands = 6; // Número máximo de comandos permitidos
@@ -11,7 +9,10 @@ const character = document.getElementById('character');
 const target = document.getElementById('target');
 const feedback = document.getElementById('feedback');
 const commandSlots = document.querySelectorAll('.command-slot');
+const backgroundMusic = document.getElementById('background-music');
+const soundControl = document.getElementById('sound-control');
 
+let isSoundOn = false; // Estado do som
 let animationInterval;
 let animationFrame;
 let targetAnimationFrame;
@@ -28,6 +29,9 @@ window.onload = function() {
 function startGame() {
     document.getElementById('game-screen').style.display = 'block';
 
+
+    
+
     // Inicia a reprodução da música de fundo
     const backgroundMusic = document.getElementById('background-music');
     backgroundMusic.play();
@@ -36,41 +40,37 @@ function startGame() {
     commandButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             if (currentSlot) {
-                // Se há um slot selecionado, substitua a imagem da seta e mova o personagem
+                // Substituir comando no slot selecionado
                 updateCommandSlot(currentSlot, btn.getAttribute('data-command'));
-                currentSlot = null; // Resetar slot selecionado
-                lastCommand = btn.getAttribute('data-command'); // Atualizar o último comando
+                currentSlot = null;
+                lastCommand = btn.getAttribute('data-command');
             } else {
-                // Se não há um slot selecionado, adicione o comando à lista
+                // Adicionar novo comando
                 addCommand(btn.getAttribute('data-command'));
-                lastCommand = btn.getAttribute('data-command'); // Atualizar o último comando
+                lastCommand = btn.getAttribute('data-command');
             }
         });
     });
 
-    // Configurar eventos de clique nos botões abaixo da game area
     commandSlots.forEach(slot => {
         slot.addEventListener('click', () => {
             if (slot.style.backgroundImage) {
-                // Se o slot já tiver um comando, marque-o como o slot atual para substituição
                 currentSlot = slot;
-                // Remove a imagem do slot selecionado
                 const commandToRemove = slot.dataset.command;
                 slot.style.backgroundImage = '';
-                slot.dataset.command = ''; // Remove o comando do dataset
-                // Remove o comando da lista
+                slot.dataset.command = '';
                 const commandIndex = commands.indexOf(commandToRemove);
                 if (commandIndex !== -1) {
                     commands.splice(commandIndex, 1);
                 }
-                lastCommand = commandToRemove; // Atualizar o último comando
+                lastCommand = commandToRemove;
             }
         });
     });
 
     populateGrid();
     animateTarget();
-    positionTarget('D', 3);  // Posicionando o target na coordenada D3
+    resetRandomPositions(); // Posiciona o personagem e a moeda de forma aleatória
 }
 
 function playButtonPressSound() {
@@ -78,13 +78,9 @@ function playButtonPressSound() {
     buttonPressSound.play();
 }
 
-
-
-// Outras funções permanecem as mesmas
-
 function populateGrid() {
     const gridContainer = document.getElementById('grid-container');
-    gridContainer.innerHTML = ''; // Limpar qualquer célula existente
+    gridContainer.innerHTML = ''; // Limpa qualquer célula existente
 
     for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
@@ -96,51 +92,74 @@ function populateGrid() {
     }
 }
 
-// ... Mantenha o restante do código JavaScript inalterado
-
-
 function getCellPosition(row, col) {
     return {
         top: row * 40,
-        left: (col.charCodeAt(0) - 65) * 40 // Convertendo a letra para índice (A=0, B=1, ..., J=9)
+        left: (col.charCodeAt(0) - 65) * 40
     };
-}
-
-function positionTarget(col, row) {
-    const position = getCellPosition(row, col);
-    target.style.top = `${position.top}px`;
-    target.style.left = `${position.left}px`;
 }
 
 function addCommand(command) {
     if (commands.length < maxCommands) {
         commands.push(command);
-
-        // Encontra o primeiro slot vazio para adicionar o novo comando
         const emptySlot = Array.from(commandSlots).find(slot => !slot.style.backgroundImage);
         if (emptySlot) {
-            emptySlot.style.backgroundImage = `url('assets/system/${command} arrow.png')`; // Adiciona a nova imagem
-            emptySlot.dataset.command = command; // Armazena o comando no dataset
+            emptySlot.style.backgroundImage = `url('assets/system/${command} arrow.png')`;
+            emptySlot.dataset.command = command;
         }
     }
 }
 
 function updateCommandSlot(slot, command) {
-    // Atualiza o slot com o novo comando
-    slot.style.backgroundImage = `url('assets/system/${command} arrow.png')`; // Atualiza a imagem
-    slot.dataset.command = command; // Atualiza o comando no dataset
-    // Adiciona o novo comando à lista
+    slot.style.backgroundImage = `url('assets/system/${command} arrow.png')`;
+    slot.dataset.command = command;
     if (commands.length < maxCommands) {
         commands.push(command);
     }
 }
 
-function executeCommands() {
-    let position = { ...initialPosition };
-    let index = 0;
+// Função para calcular a distância de Manhattan entre duas posições
+function manhattanDistance(pos1, pos2) {
+    return Math.abs(pos1.row - pos2.row) + Math.abs(pos1.col - pos2.col);
+}
 
-    character.style.top = `${initialPosition.top}px`;
-    character.style.left = `${initialPosition.left}px`;
+// Função para gerar uma posição aleatória dentro da matriz
+function getRandomPosition() {
+    return {
+        row: Math.floor(Math.random() * 10),
+        col: Math.floor(Math.random() * 10)
+    };
+}
+
+// Função para reposicionar o personagem e a moeda com base na distância máxima
+function resetRandomPositions() {
+    let characterPosition;
+    let targetPosition;
+
+    do {
+        characterPosition = getRandomPosition();
+        targetPosition = getRandomPosition();
+    } while (manhattanDistance(characterPosition, targetPosition) > 6);
+
+    // Atualiza a posição do personagem no DOM
+    const characterPositionPixels = getCellPosition(characterPosition.row, String.fromCharCode(65 + characterPosition.col));
+    character.style.top = `${characterPositionPixels.top}px`;
+    character.style.left = `${characterPositionPixels.left}px`;
+
+    // Atualiza a posição da moeda no DOM
+    const targetPositionPixels = getCellPosition(targetPosition.row, String.fromCharCode(65 + targetPosition.col));
+    target.style.top = `${targetPositionPixels.top}px`;
+    target.style.left = `${targetPositionPixels.left}px`;
+}
+
+
+function executeCommands() {
+    // Usa a posição atual do personagem como ponto de partida
+    let position = {
+        top: parseInt(character.style.top, 10),
+        left: parseInt(character.style.left, 10)
+    };
+    let index = 0;
 
     animationInterval = setInterval(() => {
         if (index < commands.length) {
@@ -166,52 +185,80 @@ function executeCommands() {
             }
 
             if (isValidPosition(newPosition)) {
-                position = newPosition;
+                position = newPosition; // Atualiza a posição do personagem
                 character.style.top = `${position.top}px`;
                 character.style.left = `${position.left}px`;
                 animateCharacter();
             } else {
-                // Aplica o efeito de fantasma piscando ao colidir com a borda
+                // Se a posição não é válida, adiciona o efeito visual
                 character.classList.add('blink-border');
-
-                setTimeout(() => {
-                    character.classList.remove('blink-border');
-                }, 2000); // Efeito de fantasma piscando dura 2 segundos
+                setTimeout(() => character.classList.remove('blink-border'), 2000);
             }
 
             index++;
         } else {
             clearInterval(animationInterval);
-            clearInterval(animationFrame); // Stop the animation
-            character.src = 'assets/player.png'; // Reset to the first frame
+            clearInterval(animationFrame);
+            character.src = 'assets/player.png';
 
-            if (position.top === parseInt(target.style.top, 10) && position.left === parseInt(target.style.left, 10)) {
-                playCoinSound(); // Tocar o som da moeda
-                resetGame(); // Retornar ao estado inicial
+            // Verifica se o personagem chegou à posição do alvo (moeda)
+            if (
+                position.top === parseInt(target.style.top, 10) &&
+                position.left === parseInt(target.style.left, 10)
+            ) {
+                playCoinSound();
+                moveCoinUp(); // Mover moeda para célula acima
+                speedUpTargetAnimation(); // Acelera a animação da moeda
+
+                // Adiciona atraso e redireciona para a próxima fase
+                setTimeout(() => {
+                    window.location.href = "index.html"; // Redireciona para a próxima fase
+                }, 2000);
             } else {
                 feedback.textContent = 'Tente novamente!';
-                
-                // Adiciona a classe de piscar ao personagem
                 character.classList.add('blink');
-                
-                // Remove a classe de piscar após 2 segundos
                 setTimeout(() => {
                     character.classList.remove('blink');
                     feedback.textContent = '';
                     resetCharacterPosition();
                 }, 2000);
-
-                // Remover a mensagem "Tente novamente!" após 5 segundos
-                setTimeout(() => {
-                    feedback.textContent = '';
-                }, 5000);
-
-                commands.length = 0; // Clear commands
-                commandSlots.forEach(slot => slot.style.backgroundImage = ''); // Clear slots
+                commands.length = 0;
+                commandSlots.forEach(slot => (slot.style.backgroundImage = ''));
             }
         }
     }, 500);
 }
+
+
+
+function moveCoinUp() {
+    const targetTop = parseInt(target.style.top, 10);
+    const newTargetTop = targetTop - 40;  // Movimenta a moeda uma célula acima (40px)
+
+    if (newTargetTop >= 0) {  // Garante que a moeda não vá para fora da área do jogo
+        target.style.top = `${newTargetTop}px`;
+    }
+}
+
+function speedUpTargetAnimation() {
+    clearInterval(targetAnimationFrame); // Para a animação atual
+
+    let frame = 0;
+    const targetAnimationFrames = ['assets/target.png', 'assets/target2.png', 'assets/target3.png', 'assets/target4.png'];
+
+    // Acelera a animação para 50ms por quadro (duas vezes mais rápido)
+    targetAnimationFrame = setInterval(() => {
+        target.src = targetAnimationFrames[frame];
+        frame = (frame + 1) % targetAnimationFrames.length;
+    }, 50);
+
+    // Após 2 segundos, retorna a velocidade normal da animação
+    setTimeout(() => {
+        clearInterval(targetAnimationFrame);
+        animateTarget(); // Volta à animação original
+    }, 2000);
+}
+
 
 function isValidPosition(position) {
     const maxTop = 360;
@@ -220,13 +267,24 @@ function isValidPosition(position) {
     return position.top >= 0 && position.top <= maxTop && position.left >= 0 && position.left <= maxLeft;
 }
 
+
+
+
+
+
+
+
+
+
 function resetCharacterPosition() {
     setTimeout(() => {
-        character.style.top = `${initialPosition.top}px`;
-        character.style.left = `${initialPosition.left}px`;
+        // Renasce na posição inicial dinâmica da rodada
+        character.style.top = `${currentInitialPosition.top}px`;
+        character.style.left = `${currentInitialPosition.left}px`;
         character.classList.remove('flip-horizontal'); // Remove o flip ao resetar
-    }, 500); // Add a delay before resetting position
+    }, 500); // Mantém o delay antes de resetar a posição
 }
+
 
 function animateCharacter() {
     let frame = 0;
@@ -271,11 +329,15 @@ function resetGame() {
         character.style.top = `${initialPosition.top}px`;
         character.style.left = `${initialPosition.left}px`;
         character.classList.remove('flip-horizontal'); // Remove o flip ao resetar
-        commands.length = 0; // Clear commands
-        commandSlots.forEach(slot => slot.style.backgroundImage = ''); // Clear slots
-        feedback.textContent = ''; // Clear feedback
+        commands.length = 0; // Limpa os comandos
+        commandSlots.forEach(slot => slot.style.backgroundImage = ''); // Limpa os slots
+        feedback.textContent = ''; // Limpa o feedback
+
+        // Posiciona o target em uma nova célula aleatória após o reset
+        positionRandomTarget();
     }, 1000); // Delay antes de reiniciar o jogo
 }
+
 
 const executeBtn = document.getElementById('execute-btn');
 
@@ -313,3 +375,26 @@ function addClickAnimation(button) {
 commandButtons.forEach(button => {
     addClickAnimation(button);
 });
+
+// Alternar som ao clicar no ícone
+soundControl.addEventListener('click', () => {
+    if (isSoundOn) {
+        backgroundMusic.pause(); // Pausa a música
+        soundControl.src = 'assets/system/soundOff.png'; // Muda para ícone de som desligado
+    } else {
+        backgroundMusic.play(); // Toca a música
+        backgroundMusic.loop = true; // Configura a música para tocar em loop
+        soundControl.src = 'assets/system/soundOn.png'; // Muda para ícone de som ligado
+    }
+    isSoundOn = !isSoundOn; // Alterna o estado do som
+});
+
+
+
+
+
+
+
+
+
+

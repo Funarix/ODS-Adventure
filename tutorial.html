@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODS Adventure</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Fonte pixel art -->
+</head>
+<body>
+    <div id="app">
+        
+        <h1>ODS Adventure</h1>
+        <div id="game-screen">
+            
+            <img id="sound-control" src="assets/system/soundOff.png" alt="Sound Control">
+            <div id="instructions" class="pixel-font">Use os comandos para mover o personagem até a moeda!</div>
+            <div id="command-panel">
+                <img class="command-btn" src="assets/system/up arrow.png" data-command="up" alt="Up Arrow">
+                <img class="command-btn" src="assets/system/down arrow.png" data-command="down" alt="Down Arrow">
+                <img class="command-btn" src="assets/system/left arrow.png" data-command="left" alt="Left Arrow">
+                <img class="command-btn" src="assets/system/right arrow.png" data-command="right" alt="Right Arrow">
+                <img id="execute-btn" src="assets/system/play.png" alt="Play">
+
+                
+            </div>
+            <div id="game-area-wrapper">
+                <div id="game-area">
+                    <div id="grid-container"></div>
+                    <img id="character" src="assets/player.png" style="top: 0; left: 0;">
+                    <img id="target" src="assets/target.png" style="top: 200px; left: 200px;">
+                    
+                </div>
+            </div>
+            <div id="command-buttons">
+                <button class="command-slot"></button>
+                <button class="command-slot"></button>
+                <button class="command-slot"></button>
+                <button class="command-slot"></button>
+                <button class="command-slot"></button>
+                <button class="command-slot"></button>
+            </div>
+            <div id="feedback" class="pixel-font"></div> <!-- Adicionado a classe de fonte pixel -->
+        </div>
+    </div>
+    <audio id="background-music" src="assets/audio/Game/background.mp3" loop></audio>
+    <script src="script.js"></script>
+</body>
+</html>

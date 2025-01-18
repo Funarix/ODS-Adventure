@@ -1,11 +1,13 @@
 
+
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #333;
     margin: 0;
 }
 
@@ -17,8 +19,17 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Fonte de pixel art para os textos */
+.pixel-font {
+    font-family: 'Press Start 2P', cursive;
+}
+
 #game-screen {
     margin-top: 20px;
+}
+
+#instructions {
+    margin-bottom: 20px;
 }
 
 #command-panel {
@@ -181,5 +192,103 @@ h1 {
     );
     -webkit-background-clip: text; /* Suporte para navegadores Webkit */
     background-clip: text; /* Exibe o gradiente apenas na área do texto */
+}
+
+#sound-control {
+    width: 30px;
+    height: 27px;
+    position: absolute; /* Permite o posicionamento relativo ao contêiner pai */
+    bottom: 10px; /* Define a distância da parte inferior do contêiner */
+    right: 270px; /* Define a distância da lateral direita do contêiner */
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 10; /* Garante que o ícone fique acima de outros elementos */
+}
+
+#sound-control:active {
+    transform: scale(0.9); /* Animação de clique */
+}
+
+
+
+#start-screen {
+    text-align: center;
+    color: white;
+}
+
+#game-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, 
+        #26BDE2, #0A97D9, #00689D, #19486A, 
+        #4C9F38, #3F7E44, #56C02B,          
+        #DDA63A, #FCC30B,                  
+        #E5243B, #C5192D, #FF3A21, #A21942,
+        #DD1367                            
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Centralizar e ajustar o layout da tela inicial */
+#start-app {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Espaçamento entre os elementos */
+}
+
+/* Estilizando o logo */
+#start-image {
+    width: 250px; /* Ajuste o tamanho conforme necessário */
+    height: auto;
+    margin-right: 10px; /* Move para a direita */
+}
+
+/* Estilizando o botão Start */
+#start-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    color: white;
+    background-color: #4C9F38;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s ease;
+    font-family: 'Press Start 2P', cursive; /* Fonte pixel art */
+    margin-top: 20px; /* Move o botão para baixo */
+    margin-left: -10px; /* Move o botão para a esquerda */
+}
+
+#start-button:hover {
+    background-color: #3F7E44;
+}
+
+#start-button:active {
+    transform: scale(0.95);
+}
+
+/* Animação de rotação */
+@keyframes rotate-clockwise {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Aplica a animação à imagem */
+#start-image {
+    animation: rotate-clockwise 5s linear infinite; /* 5 segundos para uma rotação completa */
 }
 
