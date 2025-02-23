@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODS Adventure</title>
+    <title>ODS 1 - Erradicacao da Pobreza!</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Fonte pixel art -->
 </head>
 <body>
-    <div id="start-app"> <!-- Nome único para esta tela -->
-        <h1>ODS Adventure</h1>
+    <div id="start-ods1"> <!-- Nome único para esta tela -->
+        <h1>ODS 1 - Vamos acabar com a pobreza?</h1>
+              
+ 
         <div id="start-screen">
             <img id="start-image" src="Assets/Pixel Art/icon/ods.png" alt="Game Logo" />
+            <img id="ods1-image" src="Assets/Pixel Art/icon/ods1.jpeg" alt="Imagem ODS 1" />
+            
             <button id="start-button" class="pixel-font">Iniciar</button>
         </div>
     </div>
@@ -19,7 +23,7 @@
     <script>
         // Adiciona funcionalidade ao botão de iniciar
         document.getElementById('start-button').addEventListener('click', () => {
-            window.location.href = 'tutorial.html'; // Redireciona para o tutorial
+            window.location.href = 'stage1.html'; // Redireciona para a página stage1.html
         });
     </script>
 </body>

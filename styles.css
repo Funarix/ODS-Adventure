@@ -289,6 +289,18 @@ h1 {
 
 /* Aplica a animação à imagem */
 #start-image {
-    animation: rotate-clockwise 5s linear infinite; /* 5 segundos para uma rotação completa */
+    animation: rotate-clockwise 15s linear infinite; /* 5 segundos para uma rotação completa */
 }
+
+
+#start-ods1 {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
 

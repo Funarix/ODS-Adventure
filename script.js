@@ -16,6 +16,8 @@ let isSoundOn = false; // Estado do som
 let animationInterval;
 let animationFrame;
 let targetAnimationFrame;
+let initialCharacterPosition = null; // Posição inicial da rodada
+
 
 const initialPosition = { top: 0, left: 0 };
 let currentSlot = null; // Armazena o botão atual clicado para substituição
@@ -131,15 +133,34 @@ function getRandomPosition() {
     };
 }
 
+
+
+// Gera todas as posições possíveis a uma distância específica
+function getPositionsAtDistance(start, distance) {
+    const positions = [];
+
+    for (let rowOffset = -distance; rowOffset <= distance; rowOffset++) {
+        const colOffset = distance - Math.abs(rowOffset);
+        const possiblePositions = [
+            { row: start.row + rowOffset, col: start.col + colOffset },
+            { row: start.row + rowOffset, col: start.col - colOffset }
+        ];
+
+        possiblePositions.forEach(pos => {
+            if (pos.row >= 0 && pos.row < 10 && pos.col >= 0 && pos.col < 10) {
+                positions.push(pos);
+            }
+        });
+    }
+
+    return positions;
+}
+
 // Função para reposicionar o personagem e a moeda com base na distância máxima
 function resetRandomPositions() {
-    let characterPosition;
-    let targetPosition;
-
-    do {
-        characterPosition = getRandomPosition();
-        targetPosition = getRandomPosition();
-    } while (manhattanDistance(characterPosition, targetPosition) > 6);
+    const characterPosition = getRandomPosition();
+    const possibleTargetPositions = getPositionsAtDistance(characterPosition, 6);
+    const targetPosition = possibleTargetPositions[Math.floor(Math.random() * possibleTargetPositions.length)];
 
     // Atualiza a posição do personagem no DOM
     const characterPositionPixels = getCellPosition(characterPosition.row, String.fromCharCode(65 + characterPosition.col));
@@ -212,7 +233,7 @@ function executeCommands() {
 
                 // Adiciona atraso e redireciona para a próxima fase
                 setTimeout(() => {
-                    window.location.href = "index.html"; // Redireciona para a próxima fase
+                    window.location.href = "tutorial.html"; // Redireciona para a próxima fase
                 }, 2000);
             } else {
                 feedback.textContent = 'Tente novamente!';
