@@ -45,13 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let stepIndex = 0; // Índice do passo atual do tutorial
 
     const tutorialSteps = [
-        "Clique em uma seta para escolher um movimento!",
-        "Escolha as setas conforme a direcao que o personagem deve seguir!",
-        "Ótimo! Continue adicionando comandos até completar sua sequência!",
-        "Continue adicionando comandos, precisamos chegar ate a moeda!",
-        " Estamos quase la, falta pouco para completarmos a sequencia!",
-        "Adicione o ultimo comando, e o percurso estara completo!",
-        "Agora, pressione o botão 'Executar' para testar sua sequência!",
+    "Clique em uma seta para escolher um movimento!",  
+    "Escolha a direção certa para o personagem seguir!",  
+    "Ótimo! Continue adicionando os comandos agora!",  
+    "Continue, precisamos alcançar a moeda no final!",  
+    "Estamos quase lá! Falta pouco para terminar!",  
+    "Adicione o último comando para finalizar tudo!",  
+    "Agora, pressione 'Executar' para testar tudo!",  
         // A última mensagem será exibida somente quando o personagem pegar a moeda.
     ];
 
@@ -84,13 +84,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const targetLeft = parseInt(target.style.left, 10);
 
         if (characterTop === targetTop && characterLeft === targetLeft) {
-            instructions.textContent = "Parabéns! Você concluiu o tutorial!";
+            instructions.textContent = "Parabéns! Você finalizou todo o tutorial!!!!!!";
 
             setTimeout(() => {
                 window.location.href = "ods1.html";
             }, 2000);
         }
     }
+
+
+    
 
     // Monitorar a posição do personagem a cada movimento
     const observer = new MutationObserver(checkCharacterPosition);
